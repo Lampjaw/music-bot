@@ -1,10 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"math/rand"
-	"os"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -132,12 +130,12 @@ func (p *MusicPlayer) RemoveDuplicates() {
 	p.SongQueue = list
 }
 
-func (p *MusicPlayer) RemoveSongFromQueue(videoID string) {
+func (p *MusicPlayer) RemoveSongFromQueue(item *PlaylistItem) {
 	if len(p.SongQueue) == 0 {
 		return
 	}
 
-	sIdx := p.findSongIndex(videoID)
+	sIdx := p.findSongIndex(item.VideoID)
 
 	var songExtension string
 	if p.SongQueue[sIdx] != nil && p.SongQueue[sIdx].GetSongFormat() != nil {
@@ -146,8 +144,7 @@ func (p *MusicPlayer) RemoveSongFromQueue(videoID string) {
 
 	p.SongQueue = append(p.SongQueue[:sIdx], p.SongQueue[sIdx+1:]...)
 
-	fileName := fmt.Sprintf("%s.%s", videoID, songExtension)
-	os.Remove(fileName)
+	RemoveSong(item)
 }
 
 func (p *MusicPlayer) playCurrentSong() {
@@ -194,7 +191,7 @@ func (p *MusicPlayer) postSongHandling(item *PlaylistItem) {
 	}
 
 	if !p.loopSong {
-		p.RemoveSongFromQueue(item.VideoID)
+		p.RemoveSongFromQueue(item)
 	}
 }
 
