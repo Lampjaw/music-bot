@@ -63,6 +63,7 @@ func RemoveSong(item *PlaylistItem) error {
 	if fileName != "" && fileExists(fileName) {
 		return os.Remove(fileName)
 	}
+	return nil
 }
 
 func getPlaylistInfoFromURL(surl string) (*PlaylistInfo, error) {
