@@ -186,9 +186,16 @@ func (p *MusicPlugin) runPlayMusicCommand(bot *discordgobot.Gobot, client *disco
 	}
 
 	if payload.Arguments["url"] != "" {
-		playlist, _ := p.player.AddPlaylistToQueue(payload.Arguments["url"])
+		ytURL := payload.Arguments["url"]
+		if strings.Contains(ytURL, "playlist") {
+			playlist, _ := p.player.AddPlaylistToQueue(ytURL)
 
-		client.SendMessage(payload.Message.Channel(), fmt.Sprintf("Adding %v songs to the queue from %s", len(playlist.Items), playlist.Title))
+			client.SendMessage(payload.Message.Channel(), fmt.Sprintf("Adding %v songs to the queue from `%s`", len(playlist.Items), playlist.Title))
+		} else {
+			vid, _ := p.player.AddSongToQueue(ytURL)
+
+			client.SendMessage(payload.Message.Channel(), fmt.Sprintf("Adding `%s` to the queue", vid.Title))
+		}
 	}
 
 	go p.playMusicInChannel(client.Session, voiceState.GuildID, voiceState.ChannelID)
