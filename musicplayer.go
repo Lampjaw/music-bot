@@ -136,12 +136,6 @@ func (p *MusicPlayer) RemoveSongFromQueue(item *PlaylistItem) {
 	}
 
 	sIdx := p.findSongIndex(item.VideoID)
-
-	var songExtension string
-	if p.SongQueue[sIdx] != nil && p.SongQueue[sIdx].GetSongFormat() != nil {
-		songExtension = p.SongQueue[sIdx].GetSongFormat().Extension
-	}
-
 	p.SongQueue = append(p.SongQueue[:sIdx], p.SongQueue[sIdx+1:]...)
 
 	RemoveSong(item)
