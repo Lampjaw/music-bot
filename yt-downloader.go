@@ -57,6 +57,14 @@ func LoadSong(file *os.File) (*webm.Reader, error) {
 	return reader, err
 }
 
+func RemoveSong(item *PlaylistItem) error {
+	fileName := getFileName(item)
+
+	if fileName != "" && fileExists(fileName) {
+		return os.Remove(fileName)
+	}
+}
+
 func getPlaylistInfoFromURL(surl string) (*PlaylistInfo, error) {
 	playlistURL, err := url.ParseRequestURI(surl)
 	if err != nil {
